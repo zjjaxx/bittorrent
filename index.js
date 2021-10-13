@@ -1,4 +1,4 @@
-'use strict'
+
 const spider = new(require('./src/spider'))
 const fs = require("fs")
 const moment = require('moment')
@@ -41,9 +41,9 @@ const startParse = async function() {
         }, 1000);
         return
     }
-
+    console.log('m2t ------ secc ---- ' + infohash )
     let res = await Mongodb.findOne({ infohash: infohash.toLocaleUpperCase() })
-
+ 
     if (res) {
         res = new Mongodb(res)
         res.save()
@@ -57,7 +57,7 @@ const startParse = async function() {
             res = new Mongodb(res)
             res.save()
             SUCCESSTOTAL++
-            console.log('m2t ------ secc ---- ' + infohash + ' ----' + SUCCESSTOTAL)
+            console.log('save success ---- ' + infohash + ' ----' + SUCCESSTOTAL)
             // 所以以下代码不会被执行了
 
         } catch (err) {

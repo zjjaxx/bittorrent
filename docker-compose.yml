@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  app:
+     image: keymetrics/pm2:latest-alpine
+     command: sh -c "npm install && pm2-runtime start ecosystem.config.js"
+     ports:
+       - 3000:4048
+     working_dir: /app
+     volumes:
+       - ./:/app
+  mongo:
+    image: mongo
+    restart: always
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
