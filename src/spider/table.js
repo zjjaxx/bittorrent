@@ -44,6 +44,7 @@ class Node {
 
 class Table {
     constructor(cap) {
+        //生成一个唯一ID
         this.id = Node.generateID()
         this.nodes = []
         this.caption = cap

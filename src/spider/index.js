@@ -18,7 +18,7 @@ const bootstraps = [{
 function isValidPort(port) {
     return port > 0 && port < (1 << 16)
 }
-
+//随机生成targetId
 function generateTid() {
     return parseInt(Math.random() * 99).toString()
 }
@@ -27,6 +27,7 @@ class Spider extends Emiter {
     constructor() {
         super()
         const options = arguments.length ? arguments[0] : {}
+        //
         this.table = new Table(options.tableCaption || 600)
         this.bootstraps = options.bootstraps || bootstraps
         this.token = new Token()
@@ -38,7 +39,7 @@ class Spider extends Emiter {
         const data = bencode.encode(message)
         this.udp.send(data, 0, data.length, address.port, address.address)
     }
-
+    //该请求包含两个参数id和target，id为该节点的nodeID，target为要查询的nodeID。回复中应该包含被请求节点的路由表中距离target最接近的8个nodeID。
     findNode(id, address) {
         const message = {
             t: generateTid(),
@@ -51,7 +52,7 @@ class Spider extends Emiter {
         }
         this.send(message, address)
     }
-
+    //加入DHT
     join() {
         this.bootstraps.forEach((b) => {
             this.findNode(this.table.id, b)
@@ -185,6 +186,7 @@ class Spider extends Emiter {
         return num;
     }
     listen() {
+        //udp套接字
         this.udp = dgram.createSocket('udp4')
         var port = 4048
 
@@ -192,9 +194,11 @@ class Spider extends Emiter {
         this.udp.on('listening', () => {
             console.log(`Listen on ${this.udp.address().address}:${this.udp.address().port}`)
         })
+        //response
         this.udp.on('message', (data, addr) => {
             this.parse(data, addr)
         })
+        //error
         this.udp.on('error', (err) => {})
         this.joinInterval = setInterval(() => this.join(), 3000)
         this.join()
